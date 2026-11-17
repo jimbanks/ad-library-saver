@@ -3,6 +3,7 @@
 // The content script and the popup only talk to this file.
 
 import { QUESTIONS, LOW_CONFIDENCE } from "./questions.js";
+import { cleanBody } from "./csv.js";
 
 const DB_NAME = "ad-library-saver";
 const STORE = "ads";
@@ -61,7 +62,7 @@ function mediaSummary(ad) {
 function stateFor(ad) {
   return {
     advertiser: ad.advertiser,
-    copy: ad.body,
+    copy: cleanBody(ad),
     headline: ad.headline,
     cta_button: ad.ctaText || "none shown",
     media: mediaSummary(ad)
@@ -157,6 +158,8 @@ async function handle(msg) {
         // Keep the tags and first-seen time; refresh what the page shows now.
         existing.status = msg.ad.status;
         existing.versions = msg.ad.versions;
+        existing.activeTime = msg.ad.activeTime;
+        existing.lowImpressions = msg.ad.lowImpressions;
         existing.lastSeenAt = msg.ad.savedAt;
         await putAd(existing);
         return { isNew: false };

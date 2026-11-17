@@ -13,7 +13,7 @@ export const COLUMNS = [
   ["needs_check", a => a.needsCheck],
   ["tag_status", a => a.tagStatus],
   ["tag_error", a => a.tagError],
-  ["copy", a => a.body],
+  ["copy", a => cleanBody(a)],
   ["headline", a => a.headline],
   ["cta_button", a => a.ctaText],
   ["landing_url", a => a.landingUrl],
@@ -23,8 +23,10 @@ export const COLUMNS = [
   ["cards", a => a.cards],
   ["versions", a => a.versions],
   ["status", a => a.status],
-  ["started_running", a => a.startedRunning],
-  ["stopped_running", a => a.stoppedRunning],
+  ["started_running", a => dateOnly(a.startedRunning)],
+  ["stopped_running", a => dateOnly(a.stoppedRunning)],
+  ["active_time", a => activeTime(a)],
+  ["low_impressions", a => lowImpressions(a) ? "yes" : "no"],
   ["ad_url", a => a.adUrl],
   ["page_url", a => a.pageUrl],
   ["country", a => a.country],
@@ -34,6 +36,29 @@ export const COLUMNS = [
   ["last_seen", a => a.lastSeenAt],
   ["tagged_at", a => a.taggedAt]
 ];
+
+// Records saved before 1.0.1 carry Meta's "Low impression count" label as the
+// last line of the copy and " · Total active time …" inside the start date.
+// These read both shapes, so old records export clean without a rescrape.
+const LOW_TAIL = /\n?Low impression count\s*$/i;
+
+export function cleanBody(a) {
+  return (a.body || "").replace(LOW_TAIL, "");
+}
+
+function lowImpressions(a) {
+  return a.lowImpressions ?? LOW_TAIL.test(a.body || "");
+}
+
+function dateOnly(s) {
+  return (s || "").split("·")[0].trim();
+}
+
+function activeTime(a) {
+  if (a.activeTime) return a.activeTime;
+  const m = (a.startedRunning || "").match(/Total active time (.+)$/);
+  return m ? m[1].trim() : "";
+}
 
 function num(v) {
   return v == null ? "" : Math.round(v * 100) / 100;

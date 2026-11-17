@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ad Library Saver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Saves every Meta Ad Library ad you scroll past into a local database, tags format, CTA and funnel stage with Jev, and exports CSV.",
   "permissions": ["storage", "unlimitedStorage"],
   "host_permissions": [

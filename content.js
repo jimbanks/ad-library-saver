@@ -18,6 +18,12 @@
   const NOISE = /^(Menu|See ad details|See summary details|EU transparency|Platforms|Open Drop-down|Active|Inactive|Sponsored|​)$/i;
   const DOMAIN_LINE = /^[A-Z0-9-]+(\.[A-Z0-9-]+)+$/;   // "GYMSHARK.COM" link captions
   const TIME_LINE = /^\d+:\d{2}( \/ \d+:\d{2})?$/;        // video player "0:00"
+  // Meta's reach label. It renders inside the copy block, so without this it
+  // was saved as the last line of the ad copy.
+  const LOW_IMPRESSION = /^Low impression count$/i;
+  // Dates come in the viewer's locale: "2 Jul 2026" (UK) or "Jul 2, 2026" (US).
+  const DATE = "(\\d{1,2} \\w{3,9} \\d{4}|\\w{3,9} \\d{1,2}, \\d{4})";
+  const RANGE = new RegExp(`^${DATE} - ${DATE}`, "m");
 
   let enabled = true;
   chrome.storage.local.get({ autoSave: true }, s => { enabled = s.autoSave; });
@@ -80,6 +86,7 @@
     for (let i = sp + 1; sp >= 0 && i < ls.length; i++) {
       const l = ls[i];
       if (TIME_LINE.test(l) || DOMAIN_LINE.test(l) || stop.has(l) || isCta(l)) break;
+      if (LOW_IMPRESSION.test(l)) continue;
       body.push(l);
     }
 
@@ -94,9 +101,10 @@
       .find(u => u && !/facebook\.com|instagram\.com|\/\/fb\.me\//.test(u)) || "";
 
     // Active ads say "Started running on 2 Jul 2026"; inactive ones show a
-    // bare range, "14 Nov 2025 - 28 Jul 2026".
-    const running = text.match(/Started running on ([^\n]+)/) ||
-      text.match(/^(\d{1,2} \w{3,9} \d{4}) - (\d{1,2} \w{3,9} \d{4})$/m) || [];
+    // bare range, "14 Nov 2025 - 28 Jul 2026". Either can be followed by
+    // " · Total active time 2 hrs", which is kept apart from the date.
+    const running = text.match(/Started running on ([^\n·]+)/) || text.match(RANGE) || [];
+    const activeTime = (text.match(/Total active time ([^\n·]+)/) || [])[1] || "";
 
     const params = new URLSearchParams(location.search);
     return {
@@ -107,6 +115,8 @@
       status: /^Inactive$/m.test(text) ? "Inactive" : "Active",
       startedRunning: (running[1] || "").trim(),
       stoppedRunning: (running[2] || "").trim(),
+      activeTime: activeTime.trim(),
+      lowImpressions: ls.some(l => LOW_IMPRESSION.test(l)),
       versions: Number((text.match(/(\d+) ads use this creative/) || [])[1] || 1),
       body: body.join("\n"),
       headline,

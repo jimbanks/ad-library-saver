@@ -73,7 +73,7 @@ The key is held in `chrome.storage.local` in that Chrome profile, which is not s
 | Tag confidence and status | the three `*_confidence` columns, `needs_check`, `tag_status`, `tag_error` |
 | The ad | `copy`, `headline`, `cta_button`, `landing_url` (tracking parameters stripped) |
 | Media | `videos`, `images`, `carousel`, `cards` |
-| Running | `versions` ("N ads use this creative"), `status`, `started_running`, `stopped_running` |
+| Running | `versions` ("N ads use this creative"), `status`, `started_running`, `stopped_running` (dates only, in the locale the Ad Library showed), `active_time` (Meta's "Total active time", shown on recent and stopped ads), `low_impressions` (yes when Meta labels the ad "Low impression count") |
 | Links | `ad_url`, `page_url` |
 | Context | `country`, `search_query`, `view_all_page_id` |
 | Dates | `first_saved`, `last_seen`, `tagged_at` |

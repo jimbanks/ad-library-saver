@@ -20,3 +20,6 @@ npm-debug.log*
 # Python
 __pycache__/
 *.pyc
+
+# base CLI code map (machine-local)
+.base-ast/
