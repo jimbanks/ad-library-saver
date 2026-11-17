@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ad Library Saver settings</title>
+<style>
+  body { max-width: 560px; margin: 32px auto; padding: 0 16px; font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1c1e21; }
+  h1 { font-size: 20px; }
+  input[type=password], input[type=text] { width: 100%; padding: 8px; font: inherit; border: 1px solid #ccd0d5; border-radius: 6px; box-sizing: border-box; }
+  button { margin-top: 10px; margin-right: 6px; padding: 8px 14px; border: 0; border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer; background: #e4e6eb; }
+  button.primary { background: #0866ff; color: #fff; }
+  .muted { color: #65676b; font-size: 13px; }
+  #result { margin-top: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <h1>Ad Library Saver</h1>
+  <h2>Jev key</h2>
+  <p class="muted">Your TypeSafe API key. It is stored in this Chrome profile only (<code>chrome.storage.local</code>, not synced) and is sent only to <code>api.typesafe.ai</code>.</p>
+  <input type="password" id="apiKey" autocomplete="off" placeholder="Paste your TypeSafe key">
+  <p class="muted">Model</p>
+  <input type="text" id="model" placeholder="jev-latest">
+  <div>
+    <button class="primary" id="save">Save</button>
+    <button id="test">Test with an invented ad</button>
+  </div>
+  <div id="result" class="muted"></div>
+  <h2>What leaves your computer</h2>
+  <p class="muted">For each saved ad, Jev receives the advertiser name, the ad copy, the headline, the CTA button text and a media count (for example "1 video"). Nothing else: no images, no URLs, no browsing history. Ad Library content is public. Turn off "Tag new ads with Jev" in the popup to stop sending.</p>
+  <script src="options.js"></script>
+</body>
+</html>

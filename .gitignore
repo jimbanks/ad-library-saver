@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+Icon?
+
+# Secrets and local config
+.env
+.env.*
+*.key
+
+# Chrome packaging: the .pem is the private signing key, never commit it
+*.pem
+*.crx
+*.zip
+dist/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.pyc

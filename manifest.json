@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Ad Library Saver",
+  "version": "1.0.0",
+  "description": "Saves every Meta Ad Library ad you scroll past into a local database, tags format, CTA and funnel stage with Jev, and exports CSV.",
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": [
+    "https://www.facebook.com/ads/library/*",
+    "https://api.typesafe.ai/*"
+  ],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.facebook.com/ads/library/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": { "default_popup": "popup.html", "default_title": "Ad Library Saver" },
+  "options_page": "options.html",
+  "icons": { "16": "img/16.png", "48": "img/48.png", "128": "img/128.png" }
+}
